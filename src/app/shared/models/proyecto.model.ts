@@ -24,6 +24,10 @@ export interface Proyecto {
   notasRecepcion?: string | null;
   estado: string;
   total: number;
+
+  ordenId: number | null;
+  ordenCodigo: string | null;
+  ordenEstado: string | null;
 }
 
 export interface ProyectoCrear {

@@ -31,6 +31,10 @@ export class ProyectoService {
     return this.http.get<Vehiculo[]>(`${API}/clientes/${clienteId}/vehiculos`);
   }
   obtener(id: number): Observable<Proyecto> {
-  return this.http.get<Proyecto>(`${API}/proyectos/${id}`);
-}
+    return this.http.get<Proyecto>(`${API}/proyectos/${id}`);
+  }
+
+  cancelar(id: number) {
+    return this.http.put<void>(`${API_URL}/proyectos/${id}/cancelar`, {});
+  }
 }

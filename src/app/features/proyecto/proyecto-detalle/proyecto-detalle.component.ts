@@ -21,18 +21,49 @@ export class ProyectoDetalleComponent implements OnInit {
   cargando = signal(true);
   error = signal('');
 
-  // TODO: ponlo en true cuando el proyecto ya tenga orden (ver nota abajo)
-  tieneOrden = signal(false);
+  modalAbierto = signal(false);
+  cancelando = signal(false);
+  errorCancelar = signal('');
+
+  tieneOrden = computed(() => !!this.proyecto()?.ordenId);
+  cancelado = computed(() => this.proyecto()?.estado === 'Cancelado');
+  finalizado = computed(() => this.proyecto()?.estado === 'Finalizado');
 
   puedeGestionarOT = computed(() => this.auth.puede('Administrador', 'Tecnico'));
+  puedeCancelar = computed(() =>
+    this.auth.puede('Administrador') && !this.cancelado() && !this.finalizado());
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.cargar(Number(this.route.snapshot.paramMap.get('id')));
+  }
+
+  private cargar(id: number): void {
     this.api.obtener(id).subscribe({
       next: p => { this.proyecto.set(p); this.cargando.set(false); },
       error: e => {
         this.cargando.set(false);
         this.error.set(e.status === 404 ? 'El proyecto no existe.' : 'No se pudo cargar el proyecto.');
+      }
+    });
+  }
+
+  abrirModal(): void { this.errorCancelar.set(''); this.modalAbierto.set(true); }
+  cerrarModal(): void { if (!this.cancelando()) this.modalAbierto.set(false); }
+
+  confirmarCancelacion(): void {
+    const p = this.proyecto();
+    if (!p) return;
+    this.cancelando.set(true);
+    this.errorCancelar.set('');
+    this.api.cancelar(p.id).subscribe({
+      next: () => {
+        this.cancelando.set(false);
+        this.modalAbierto.set(false);
+        this.cargar(p.id);          // recarga: estado, orden y total actualizados
+      },
+      error: e => {
+        this.cancelando.set(false);
+        this.errorCancelar.set(e?.error?.mensaje ?? 'No se pudo cancelar el proyecto.');
       }
     });
   }
