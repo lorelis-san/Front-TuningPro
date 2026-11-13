@@ -34,7 +34,7 @@ export class LoginComponent {
         this.cargando = false;
         this.password = '';
         this.ingreso.emit();
-        this.router.navigate(['/proyectos']);
+        this.router.navigate([this.auth.puede('Cliente') ? '/portal' : '/proyectos']);
       },
       error: e => {
         this.cargando = false;

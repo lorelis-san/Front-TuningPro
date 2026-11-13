@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { MenuLayoutComponent } from './layout/menu-layout/menu-layout.component';
 import { LoginComponent } from './features/auth/login/login.component';
-import { PortalComponent } from './features/portal/portal.component';
 import { InventarioComponent } from './features/inventario/inventario.component';
 import { OtListComponent } from './features/ordenes-trabajo/ot-list/ot-list.component';
 import { OtNuevaComponent } from './features/ordenes-trabajo/ot-nueva/ot-nueva.component';
@@ -12,18 +11,29 @@ import { GestionComponent } from './features/gestion/gestion.component';
 import { ProyectoListComponent } from './features/proyecto/proyecto-list/proyecto-list.component';
 import { ProyectoNuevoComponent } from './features/proyecto/proyecto-nuevo/proyecto-nuevo.component';
 import { ProyectoDetalleComponent } from './features/proyecto/proyecto-detalle/proyecto-detalle.component';
+import { InicioComponent } from './features/inicio/inicio.component';
 import { authGuard, soloInvitadoGuard } from './core/guards/auth.guard';
-import { InicioComponent} from './features/inicio/inicio.component'
+import { soloClienteGuard, soloPersonalGuard } from './core/guards/rol.guard';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [soloInvitadoGuard] },
+
+  // Cliente: su propio layout, sin menú
+  {
+    path: 'portal',
+    canActivate: [authGuard, soloClienteGuard],
+    loadChildren: () => import('./features/cliente/cliente.routes').then(m => m.CLIENTE_ROUTES)
+  },
+
+  // Personal del taller: con menú
   {
     path: '',
     component: MenuLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, soloPersonalGuard],
     children: [
       { path: '', redirectTo: 'proyectos', pathMatch: 'full' },
-      { path: 'inventario', component: InventarioComponent },
       { path: 'inicio', component: InicioComponent },
+      { path: 'inventario', component: InventarioComponent },
       { path: 'proyectos', component: ProyectoListComponent },
       { path: 'proyectos/nuevo', component: ProyectoNuevoComponent },
       { path: 'proyectos/:id', component: ProyectoDetalleComponent },
@@ -33,7 +43,6 @@ export const routes: Routes = [
       { path: 'historial', component: HistorialComponent },
       { path: 'reportes', component: ReportesComponent },
       { path: 'gestion', component: GestionComponent },
-      { path: 'portal', component: PortalComponent },
     ]
   },
   { path: '**', redirectTo: '' }

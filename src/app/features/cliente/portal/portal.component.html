@@ -1,0 +1,105 @@
+<main class="contenido">
+  <div class="titulo">
+    <div>
+      <h1>Mis proyectos</h1>
+      <p>Aquí puedes ver cómo va el trabajo en tu vehículo.</p>
+    </div>
+    <button class="btn-sec" (click)="cargar()" [disabled]="cargando">
+      {{ cargando ? 'Actualizando...' : 'Actualizar' }}
+    </button>
+  </div>
+
+  <div class="alerta" *ngIf="error" role="alert">{{ error }}</div>
+
+  <ng-container *ngIf="datos">
+    <div class="resumen">
+      <div class="dato"><strong>{{ resumen.enCurso }}</strong><span>En curso</span></div>
+      <div class="dato"><strong>{{ resumen.finalizados }}</strong><span>Finalizados</span></div>
+      <div class="dato"><strong>{{ datos.vehiculos.length }}</strong><span>Vehículos</span></div>
+    </div>
+
+    <h2>Mis vehículos</h2>
+    <p class="nota" *ngIf="datos.vehiculos.length === 0">
+      Aún no tienes vehículos asociados a tu cuenta. Consulta en el taller.
+    </p>
+    <div class="vehiculos">
+      <div class="vehiculo" *ngFor="let v of datos.vehiculos">
+        <strong>{{ v.marca }} {{ v.modelo }}</strong>
+        <span>{{ v.placa }} · {{ v.anio }}</span>
+      </div>
+    </div>
+
+    <h2>Estado de mis proyectos</h2>
+    <p class="nota" *ngIf="datos.proyectos.length === 0">
+      Todavía no tienes proyectos de personalización registrados.
+    </p>
+
+    <article class="proyecto" *ngFor="let p of datos.proyectos">
+      <button type="button" class="proy-cab" (click)="alternar(p)" [attr.aria-expanded]="estaAbierto(p)">
+        <div class="proy-info">
+          <strong>Proyecto N° {{ p.id }}<ng-container *ngIf="p.nombre"> · {{ p.nombre }}</ng-container></strong>
+          <span>{{ p.vehiculo }} · Registrado el {{ p.fechaRegistro | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <span class="estado" [attr.data-estado]="p.estado">{{ p.estado }}</span>
+        <span class="flecha" [class.arriba]="estaAbierto(p)">▾</span>
+      </button>
+
+      <div class="proy-cuerpo" *ngIf="estaAbierto(p)">
+        <div class="mensaje" [attr.data-estado]="p.estado">{{ mensajeEstado(p.estado) }}</div>
+
+        <div class="pasos" *ngIf="!esCerrado(p.estado)">
+          <div class="paso" *ngFor="let e of etapas; let i = index"
+               [class.hecho]="i <= indice(p.estado)" [class.actual]="i === indice(p.estado)">
+            <span class="punto">
+              <svg *ngIf="i < indice(p.estado) || p.estado === 'Finalizado'; else numero" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <ng-template #numero>{{ i + 1 }}</ng-template>
+            </span>
+            <span class="paso-txt">{{ e }}</span>
+          </div>
+        </div>
+
+        <h3>Piezas instaladas</h3>
+        <p class="nota" *ngIf="p.piezas.length === 0">Aún no se han instalado piezas en este proyecto.</p>
+        <div class="tabla-scroll" *ngIf="p.piezas.length > 0">
+          <table>
+            <thead>
+              <tr><th>Pieza</th><th>Categoría</th><th class="num">Cant.</th><th class="num">Precio unit.</th><th class="num">Subtotal</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let d of p.piezas">
+                <td>{{ d.pieza }}</td>
+                <td>{{ d.categoria }}</td>
+                <td class="num">{{ d.cantidad }}</td>
+                <td class="num">S/ {{ d.precioUnitario | number:'1.2-2' }}</td>
+                <td class="num">S/ {{ d.subtotal | number:'1.2-2' }}</td>
+              </tr>
+              <tr class="total">
+                <td colspan="4">Subtotal de piezas</td>
+                <td class="num">S/ {{ subtotalPiezas(p) | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="orden" *ngIf="p.orden">
+          <div class="orden-tit">
+            Orden de trabajo
+            <span *ngIf="p.orden.fechaEmision"> · emitida el {{ p.orden.fechaEmision | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="orden-fila" *ngIf="p.orden.totalPiezas != null">
+            <span>Piezas (con IGV)</span><span>S/ {{ p.orden.totalPiezas | number:'1.2-2' }}</span>
+          </div>
+          <div class="orden-fila">
+            <span>Mano de obra</span><span>S/ {{ p.orden.manoObra | number:'1.2-2' }}</span>
+          </div>
+          <div class="orden-total">
+            <span>Total a pagar</span><strong>S/ {{ p.orden.total | number:'1.2-2' }}</strong>
+          </div>
+        </div>
+        <p class="nota" *ngIf="!p.orden && p.piezas.length > 0 && !esCerrado(p.estado)">
+          El taller aún no emite la orden de trabajo con el costo final.
+        </p>
+      </div>
+    </article>
+  </ng-container>
+</main>

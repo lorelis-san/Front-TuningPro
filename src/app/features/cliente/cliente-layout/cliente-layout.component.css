@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f3f4f6;
+  color: #111827;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+.barra {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 12px 24px; background: #fff; border-bottom: 1px solid #e5e7eb;
+  position: sticky; top: 0; z-index: 10;
+}
+.marca { display: flex; flex-direction: column; }
+.logo { font-weight: 700; font-size: 18px; color: #1d4ed8; }
+.sub { font-size: 12px; color: #6b7280; }
+.barra-der { display: flex; align-items: center; gap: 16px; }
+.quien { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.rol { background: #dbeafe; color: #1d4ed8; font-size: 12px; padding: 2px 10px; border-radius: 999px; }
+.btn-salir {
+  background: #1d4ed8; color: #fff; border: 0; padding: 8px 14px;
+  border-radius: 8px; cursor: pointer; font: inherit; font-size: 14px;
+}
+.btn-salir:hover { background: #1e40af; }
+
+@media (max-width: 640px) {
+  .barra { padding: 10px 14px; }
+  .sub, .quien .rol { display: none; }
+}

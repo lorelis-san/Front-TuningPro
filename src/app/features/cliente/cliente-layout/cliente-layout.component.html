@@ -1,0 +1,15 @@
+<header class="barra">
+  <div class="marca">
+    <span class="logo">TuningPro</span>
+    <span class="sub">Taller de Personalización Automotriz</span>
+  </div>
+  <div class="barra-der">
+    <div class="quien">
+      <strong>{{ auth.sesion?.nombreCompleto }}</strong>
+      <span class="rol">{{ auth.rol }}</span>
+    </div>
+    <button class="btn-salir" (click)="salir()">Cerrar sesión</button>
+  </div>
+</header>
+
+<router-outlet></router-outlet>

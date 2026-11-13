@@ -1,0 +1,74 @@
+<section class="prov">
+  <div class="cabecera">
+    <div>
+      <h3>Proveedores</h3>
+      <p class="sub">{{ proveedores.length }} registrado{{ proveedores.length === 1 ? '' : 's' }}</p>
+    </div>
+    <input *ngIf="proveedores.length > 0" type="search" class="buscador"
+           [(ngModel)]="busqueda" name="busqueda"
+           placeholder="Buscar por nombre o contacto" aria-label="Buscar proveedor" />
+  </div>
+
+  <div *ngIf="mensaje" class="aviso" [class.error]="esError" [class.ok]="!esError" role="status">
+    {{ mensaje }}
+  </div>
+
+  <!-- Formulario -->
+  <form class="formulario-card" [class.editando]="id != null" *ngIf="puedeEditar" (ngSubmit)="guardar()">
+    <strong class="form-tit">
+      {{ id == null ? 'Nuevo proveedor' : 'Editando proveedor N° ' + id }}
+    </strong>
+
+    <div class="fila">
+      <label class="campo nombre">
+        Nombre <span class="req">*</span>
+        <input type="text" name="nombre" [(ngModel)]="nombre" placeholder="Ej. Brembo"
+               class="input-amplio" autocomplete="off" />
+      </label>
+      <label class="campo contacto">
+        Contacto
+        <input type="text" name="contacto" [(ngModel)]="contacto" placeholder="Correo o teléfono"
+               class="input-amplio" autocomplete="off" />
+      </label>
+    </div>
+
+    <div class="acciones">
+      <button type="submit" class="btn-azul" [disabled]="!puedeGuardar">
+        {{ guardando ? 'Guardando...' : (id == null ? 'Registrar' : 'Guardar cambios') }}
+      </button>
+      <button type="button" class="btn-secundario" *ngIf="id != null" (click)="limpiar()">Cancelar</button>
+    </div>
+  </form>
+  <p class="nota" *ngIf="!puedeEditar">Solo puedes consultar los proveedores.</p>
+
+  <!-- Estados vacíos -->
+  <p class="nota" *ngIf="cargando && proveedores.length === 0">Cargando proveedores...</p>
+  <p class="nota" *ngIf="!cargando && proveedores.length === 0">Aún no hay proveedores registrados.</p>
+  <p class="nota" *ngIf="proveedores.length > 0 && filtrados.length === 0">
+    No hay resultados para "{{ busqueda }}".
+  </p>
+
+  <!-- Tabla -->
+  <div class="tabla-scroll" *ngIf="filtrados.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>N°</th>
+          <th>Nombre</th>
+          <th>Contacto</th>
+          <th *ngIf="puedeEditar" class="acc">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of filtrados; trackBy: porId" [class.fila-editando]="p.id === id">
+          <td class="num">{{ p.id }}</td>
+          <td><strong>{{ p.nombre }}</strong></td>
+          <td class="contacto-txt">{{ p.contacto || '—' }}</td>
+          <td *ngIf="puedeEditar" class="acc">
+            <button type="button" class="btn-editar" (click)="editar(p)">Editar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
