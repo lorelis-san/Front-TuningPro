@@ -13,7 +13,7 @@ export interface OrdenTrabajo {
   vehiculoDescripcion: string; vehiculoPlaca: string; tecnicoNombre: string;
   problemasReportados: string[]; repuestos: RepuestoOrden[]; manoObra: number;
   observaciones: string; fechaCreacion: string;
-  estado: 'Registrado' | 'En proceso' | 'Finalizado';
+  estado: 'Registrado' | 'En proceso' | 'Finalizado' | 'Cancelado';
 }
 
 export interface TecnicoOpcion { id: number; nombreCompleto: string; }

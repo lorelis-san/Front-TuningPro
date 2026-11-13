@@ -28,6 +28,12 @@ export class OtDetalleComponent implements OnInit {
   montoIgv = computed(() => igv(this.subtotal()));
   total = computed(() => totalGeneral(this.subtotal(), this.orden()?.manoObra ?? 0));
 
+  modalAbierto = signal(false);
+  cancelando = signal(false);
+  errorCancelar = signal('');
+
+  get esAdmin(): boolean { return this.auth.puede('Administrador'); }
+
   get puedeCambiarEstado(): boolean {
     return this.auth.puede('Administrador', 'Tecnico');
   }
@@ -63,6 +69,35 @@ export class OtDetalleComponent implements OnInit {
   }
 
   claseEstado(estado: string): string {
-    return estado === 'Finalizado' ? 'finalizado' : estado === 'En proceso' ? 'proceso' : 'registrado';
-  }
+  return estado === 'Finalizado' ? 'finalizado'
+       : estado === 'En proceso' ? 'proceso'
+       : estado === 'Cancelado' ? 'cancelado'
+       : 'registrado';
+}
+
+  estaCerrada(o: OrdenTrabajo): boolean {
+  return o.estado === 'Finalizado' || o.estado === 'Cancelado';
+}
+
+abrirModal(): void { this.errorCancelar.set(''); this.modalAbierto.set(true); }
+cerrarModal(): void { if (!this.cancelando()) this.modalAbierto.set(false); }
+
+confirmarCancelacion(): void {
+  const actual = this.orden();
+  if (!actual) return;
+  this.cancelando.set(true);
+  this.errorCancelar.set('');
+  this.service.cambiarEstado(actual.id, 'Cancelado').subscribe({
+    next: (o) => {
+      this.orden.set(o);
+      this.cancelando.set(false);
+      this.modalAbierto.set(false);
+      this.aviso.set('Orden cancelada. Las piezas volvieron al inventario.');
+    },
+    error: (err) => {
+      this.cancelando.set(false);
+      this.errorCancelar.set(err?.error?.mensaje ?? 'No se pudo cancelar la orden.');
+    }
+  });
+}
 }

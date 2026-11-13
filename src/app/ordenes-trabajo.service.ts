@@ -26,7 +26,7 @@ export interface OrdenTrabajo {
   manoObra: number;
   observaciones: string;
   fechaCreacion: string;
-  estado: 'Registrado' | 'En proceso' | 'Finalizado';
+  estado: 'Registrado' | 'En proceso' | 'Cancelado' |'Finalizado';
 }
 
 export interface TecnicoOpcion { id: number; nombreCompleto: string; }

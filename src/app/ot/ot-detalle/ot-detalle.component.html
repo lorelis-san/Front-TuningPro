@@ -1,93 +1,125 @@
 <a class="back" routerLink="/ordenes-trabajo">‹ Volver a órdenes</a>
 
 @if (orden(); as o) {
-  <div class="head">
-    <div>
-      <div class="eyebrow">Orden de trabajo</div>
-      <h1>{{ o.codigo }}</h1>
-      <p class="sub">{{ o.proyectoCodigo }} · Creada el {{ o.fechaCreacion | date:'d MMM y' }}</p>
-    </div>
-    <span class="estado" [class]="'estado ' + claseEstado(o.estado)">{{ o.estado }}</span>
+<div class="head">
+  <div>
+    <div class="eyebrow">Orden de trabajo</div>
+    <h1>{{ o.codigo }}</h1>
+    <p class="sub">{{ o.proyectoCodigo }} · Creada el {{ o.fechaCreacion | date:'d MMM y' }}</p>
   </div>
+  <span class="estado" [class]="'estado ' + claseEstado(o.estado)">{{ o.estado }}</span>
+</div>
 
-  <div class="layout">
-    <div class="columna">
+<div class="layout">
+  <div class="columna">
 
-      <section class="card">
-        <h2><span class="num">01</span> Información vinculada</h2>
-        <div class="grid3">
-          <div><span class="lbl">Cliente</span><strong>{{ o.clienteNombre }}</strong></div>
-          <div><span class="lbl">Vehículo</span><strong>{{ o.vehiculoDescripcion }} · {{ o.vehiculoPlaca }}</strong></div>
-          <div><span class="lbl">Técnico</span><strong>{{ o.tecnicoNombre }}</strong></div>
-        </div>
-
-        <span class="lbl bloque">Problemas reportados</span>
-        <div class="tags">
-          @for (p of o.problemasReportados; track p) { <span class="tag">{{ p }}</span> }
-          @empty { <span class="muted">Sin problemas registrados</span> }
-        </div>
-      </section>
-
-      <section class="card">
-        <h2><span class="num">02</span> Detalle de repuestos</h2>
-        <div class="tabla-scroll">
-          <table>
-            <thead>
-              <tr><th>Repuesto</th><th>Cantidad</th><th>Precio unit.</th><th>Subtotal</th></tr>
-            </thead>
-            <tbody>
-              @for (r of o.repuestos; track r.id) {
-                <tr>
-                  <td><strong>{{ r.piezaNombre }}</strong><small>{{ r.piezaCodigo }}</small></td>
-                  <td>{{ r.cantidad }}</td>
-                  <td>S/ {{ r.precioUnitario | number:'1.2-2' }}</td>
-                  <td><strong>S/ {{ (r.cantidad * r.precioUnitario) | number:'1.2-2' }}</strong></td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-
-        <span class="lbl bloque">Observaciones</span>
-        <div class="notas">{{ o.observaciones || 'Sin observaciones.' }}</div>
-      </section>
-    </div>
-
-    <aside class="columna">
-      <div class="card">
-        <h2>Resumen de costos</h2>
-        <div class="fila"><span>Subtotal repuestos</span><strong>S/ {{ subtotal() | number:'1.2-2' }}</strong></div>
-        <div class="fila"><span>IGV (18%)</span><strong>S/ {{ montoIgv() | number:'1.2-2' }}</strong></div>
-        <div class="fila"><span>Mano de obra</span><strong>S/ {{ o.manoObra | number:'1.2-2' }}</strong></div>
-        <div class="total">
-          <span class="lbl">Total general</span>
-          <strong>S/ {{ total() | number:'1.2-2' }}</strong>
-          <small>Importe incluido IGV</small>
-        </div>
+    <section class="card">
+      <h2><span class="num">01</span> Información vinculada</h2>
+      <div class="grid3">
+        <div><span class="lbl">Cliente</span><strong>{{ o.clienteNombre }}</strong></div>
+        <div><span class="lbl">Vehículo</span><strong>{{ o.vehiculoDescripcion }} · {{ o.vehiculoPlaca }}</strong></div>
+        <div><span class="lbl">Técnico</span><strong>{{ o.tecnicoNombre }}</strong></div>
       </div>
 
-      <div class="card">
-        <h2>Actualizar estado</h2>
-        <p class="ayuda">Registra el avance actual del servicio.</p>
+      <span class="lbl bloque">Problemas reportados</span>
+      <div class="tags">
+        @for (p of o.problemasReportados; track p) { <span class="tag">{{ p }}</span> }
+        @empty { <span class="muted">Sin problemas registrados</span> }
+      </div>
+    </section>
 
-        @for (e of estados; track e) {
-          <button type="button" class="opcion" [class.activa]="o.estado === e"
-                  [disabled]="!puedeCambiarEstado || guardando()" (click)="cambiarEstado(e)">
-            <span class="radio"></span> {{ e }}
+    <section class="card">
+      <h2><span class="num">02</span> Detalle de repuestos</h2>
+      <div class="tabla-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Repuesto</th>
+              <th>Cantidad</th>
+              <th>Precio unit.</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of o.repuestos; track r.id) {
+            <tr>
+              <td><strong>{{ r.piezaNombre }}</strong><small>{{ r.piezaCodigo }}</small></td>
+              <td>{{ r.cantidad }}</td>
+              <td>S/ {{ r.precioUnitario | number:'1.2-2' }}</td>
+              <td><strong>S/ {{ (r.cantidad * r.precioUnitario) | number:'1.2-2' }}</strong></td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <span class="lbl bloque">Observaciones</span>
+      <div class="notas">{{ o.observaciones || 'Sin observaciones.' }}</div>
+    </section>
+  </div>
+
+  <aside class="columna">
+    <div class="card">
+      <h2>Resumen de costos</h2>
+      <div class="fila"><span>Subtotal repuestos</span><strong>S/ {{ subtotal() | number:'1.2-2' }}</strong></div>
+      <div class="fila"><span>IGV (18%)</span><strong>S/ {{ montoIgv() | number:'1.2-2' }}</strong></div>
+      <div class="fila"><span>Mano de obra</span><strong>S/ {{ o.manoObra | number:'1.2-2' }}</strong></div>
+      <div class="total">
+        <span class="lbl">Total general</span>
+        <strong>S/ {{ total() | number:'1.2-2' }}</strong>
+        <small>Importe incluido IGV</small>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Actualizar estado</h2>
+      <p class="ayuda">Registra el avance actual del servicio.</p>
+
+      @for (e of estados; track e) {
+      <button type="button" class="opcion" [class.activa]="o.estado === e"
+        [disabled]="!puedeCambiarEstado || guardando() || estaCerrada(o)" (click)="cambiarEstado(e)">
+        <span class="radio"></span> {{ e }}
+      </button>
+      }
+
+      @if (o.estado === 'Cancelado') {
+      <p class="nota">Esta orden fue cancelada y ya no admite cambios.</p>
+      } @else if (o.estado === 'Finalizado') {
+      <p class="nota">Esta orden está finalizada y ya no admite cambios.</p>
+      } @else if (!puedeCambiarEstado) {
+      <p class="nota">Tu rol solo permite consultar el estado.</p>
+      }
+
+      @if (esAdmin && !estaCerrada(o)) {
+      <button type="button" class="btn-cancelar" style="margin-top:12px;width:100%" (click)="abrirModal()">
+        Cancelar orden
+      </button>
+      }
+
+      @if (aviso()) { <p class="aviso">{{ aviso() }}</p> }
+    </div>
+
+    @if (modalAbierto()) {
+    <div class="modal-fondo" (click)="cerrarModal()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>¿Cancelar la orden {{ o.codigo }}?</h3>
+        <p>Las piezas de la orden volverán al inventario y el proyecto {{ o.proyectoCodigo }} quedará cancelado.</p>
+        <p>Esta acción no se puede deshacer.</p>
+        @if (errorCancelar()) { <div class="error-msg">{{ errorCancelar() }}</div> }
+        <div class="botones">
+          <button type="button" class="btn-secundario" [disabled]="cancelando()" (click)="cerrarModal()">No,
+            volver</button>
+          <button type="button" class="btn-peligro" [disabled]="cancelando()" (click)="confirmarCancelacion()">
+            {{ cancelando() ? 'Cancelando…' : 'Sí, cancelar' }}
           </button>
-        }
-
-        @if (!puedeCambiarEstado) {
-          <p class="nota">Tu rol solo permite consultar el estado.</p>
-        }
-        @if (aviso()) {
-          <p class="aviso">{{ aviso() }}</p>
-        }
+        </div>
       </div>
-    </aside>
-  </div>
+    </div>
+    }
+  </aside>
+</div>
 } @else if (cargando()) {
-  <div class="card vacio">Cargando orden de trabajo…</div>
+<div class="card vacio">Cargando orden de trabajo…</div>
 } @else if (error()) {
-  <div class="card vacio error">{{ error() }}</div>
+<div class="card vacio error">{{ error() }}</div>
 }

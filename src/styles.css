@@ -38,3 +38,21 @@ app-root {
 .gestion th { background: #f0f0f0; }
 .gestion .etiqueta { padding: 2px 8px; border-radius: 10px; font-size: .8rem; font-weight: bold; background: #e8eefc; color: #1d3f9b; }
 .gestion .sin-cuenta { color: #888; font-style: italic; }
+
+
+.modal-fondo {
+  position: fixed; inset: 0; background: rgba(15, 23, 42, .55);
+  display: flex; align-items: center; justify-content: center; z-index: 1000;
+}
+.modal {
+  background: #fff; border-radius: 14px; padding: 24px; width: min(440px, 92vw);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .25);
+}
+.modal h3 { margin: 0 0 8px; font-size: 18px; }
+.modal p { margin: 0 0 6px; color: #475569; font-size: 14px; }
+.modal .error-msg { color: #b91c1c; font-size: 13px; margin-top: 8px; }
+.modal .botones { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.btn-secundario { padding: 9px 16px; border: 1px solid #cbd5e1; background: #fff; border-radius: 8px; cursor: pointer; }
+.btn-peligro { padding: 9px 16px; border: 0; background: #dc2626; color: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.btn-peligro:disabled, .btn-secundario:disabled { opacity: .6; cursor: default; }
+.btn-cancelar { padding: 9px 16px; border: 1px solid #fca5a5; color: #b91c1c; background: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; }
