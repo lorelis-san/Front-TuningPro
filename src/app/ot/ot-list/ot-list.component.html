@@ -1,0 +1,66 @@
+<div class="head">
+  <div class="eyebrow">Operaciones</div>
+  <h1>Seguimiento de órdenes</h1>
+  <p class="sub">Consulta el avance y actualiza el estado de los trabajos.</p>
+</div>
+
+<div class="chips">
+  @for (f of filtros; track f) {
+    <button type="button" class="chip" [class.activo]="filtro() === f" (click)="filtro.set(f)">
+      {{ f }} <span class="cuenta">{{ conteo(f) }}</span>
+    </button>
+  }
+</div>
+
+<div class="card">
+  <div class="buscador">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>
+    </svg>
+    <input type="text" placeholder="Buscar por OT, proyecto, cliente o placa…"
+           [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" />
+  </div>
+
+  @if (cargando()) {
+    <div class="vacio">Cargando órdenes…</div>
+  } @else if (error()) {
+    <div class="vacio error">{{ error() }}</div>
+  } @else if (filtradas().length === 0) {
+    <div class="vacio">No hay órdenes de trabajo para mostrar.</div>
+  } @else {
+    <div class="tabla-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Código OT</th><th>Vehículo</th><th>Cliente</th><th>Proyecto</th>
+            <th>Técnico</th><th>Monto</th><th>Estado</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (o of filtradas(); track o.id) {
+            <tr>
+              <td>
+                <a class="codigo" [routerLink]="['/ordenes-trabajo', o.id]">{{ o.codigo }}</a>
+                <small>{{ o.fechaCreacion | date:'d MMM y' }}</small>
+              </td>
+              <td><strong>{{ o.vehiculoPlaca }}</strong><small>{{ o.vehiculoDescripcion }}</small></td>
+              <td>{{ o.clienteNombre }}</td>
+              <td>{{ o.proyectoCodigo }}</td>
+              <td>{{ o.tecnicoNombre }}</td>
+              <td><strong>S/ {{ monto(o) | number:'1.2-2' }}</strong></td>
+              <td><span class="estado" [class]="'estado ' + claseEstado(o.estado)">{{ o.estado }}</span></td>
+              <td>
+                <a class="btn-detalle" [routerLink]="['/ordenes-trabajo', o.id]">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"></path><circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  Detalle
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

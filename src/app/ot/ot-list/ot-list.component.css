@@ -1,0 +1,46 @@
+:host { display: block; width: 100%; }
+
+.head { margin-bottom: 20px; }
+.eyebrow { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: #4338ca; font-weight: 600; }
+.head h1 { margin: 4px 0; font-size: 1.7rem; color: #0f172a; }
+.sub { margin: 0; color: #64748b; font-size: .9rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.chip {
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 7px 12px;
+  font-size: .8rem; color: #475569; cursor: pointer; display: inline-flex; gap: 8px; align-items: center;
+}
+.chip.activo { border-color: #4338ca; background: #eef2ff; color: #4338ca; }
+.cuenta { background: #f1f5f9; border-radius: 6px; padding: 1px 7px; font-size: .72rem; }
+.chip.activo .cuenta { background: #e0e7ff; }
+
+.card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; }
+
+.buscador {
+  display: flex; align-items: center; gap: 8px; border: 1px solid #cbd5e1; border-radius: 8px;
+  padding: 8px 12px; max-width: 360px; color: #94a3b8; margin-bottom: 16px;
+}
+.buscador input { border: none; outline: none; flex: 1; font-size: .85rem; }
+
+.tabla-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+th { text-align: left; font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: #94a3b8; padding: 10px 12px; background: #f8fafc; }
+td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; color: #334155; }
+td small { display: block; color: #94a3b8; font-size: .75rem; margin-top: 2px; }
+
+.codigo { color: #4338ca; font-weight: 600; text-decoration: none; }
+.codigo:hover { text-decoration: underline; }
+
+.estado { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: .74rem; font-weight: 600; }
+.estado.registrado { background: #f1f5f9; color: #475569; }
+.estado.proceso { background: #fef3c7; color: #b45309; }
+.estado.finalizado { background: #dcfce7; color: #15803d; }
+
+.btn-detalle {
+  display: inline-flex; align-items: center; gap: 6px; border: 1px solid #e2e8f0; border-radius: 8px;
+  padding: 6px 12px; font-size: .8rem; color: #334155; text-decoration: none; background: #f8fafc;
+}
+.btn-detalle:hover { background: #eef2ff; border-color: #c7d2fe; }
+
+.vacio { padding: 40px; text-align: center; color: #94a3b8; }
+.vacio.error { color: #b91c1c; }
