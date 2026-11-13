@@ -1,0 +1,87 @@
+<h3 class="titulo">Compatibilidad vehículo – pieza</h3>
+
+<div *ngIf="mensaje" class="aviso" [class.error]="esError" [class.ok]="!esError" role="status">
+  <svg *ngIf="!esError" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+  <svg *ngIf="esError" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>
+  </svg>
+  <span>{{ mensaje }}</span>
+</div>
+
+<!-- Selección de vehículo -->
+<div class="formulario-card">
+  <div class="fila sin-margen">
+    <label class="f-3">
+      Seleccionar vehículo
+      <select [ngModel]="vehiculoId" (ngModelChange)="elegirVehiculo($event)" class="input-amplio">
+        <option [ngValue]="null" disabled>Selecciona un vehículo...</option>
+        <option *ngFor="let v of vehiculos" [ngValue]="v.id">
+          {{ v.marca }} {{ v.modelo }} ({{ v.placa }}) - {{ v.anio }}
+        </option>
+      </select>
+    </label>
+  </div>
+</div>
+
+<ng-container *ngIf="vehiculoId != null">
+  <!-- Formulario de registro -->
+  <div class="formulario-card" *ngIf="puedeEditar">
+    <strong class="form-titulo">Registrar nueva compatibilidad</strong>
+    <div class="fila">
+      <label class="f-3">
+        Pieza disponible
+        <select [(ngModel)]="piezaId" class="input-amplio">
+          <option [ngValue]="null" disabled>Pieza...</option>
+          <option *ngFor="let p of disponibles" [ngValue]="p.id">{{ p.nombre }} ({{ p.categoria }})</option>
+        </select>
+      </label>
+      <div class="boton-registrar">
+        <button class="btn-azul" (click)="agregar()" [disabled]="disponibles.length === 0">Registrar compatibilidad</button>
+      </div>
+    </div>
+    <p class="nota sola" *ngIf="disponibles.length === 0">Todas las piezas ya son compatibles con este vehículo.</p>
+  </div>
+
+  <h4 class="subtitulo">Piezas compatibles ({{ compatibles.length }})</h4>
+  <p class="nota" *ngIf="compatibles.length === 0">Este vehículo aún no tiene piezas compatibles registradas.</p>
+
+  <!-- Tabla -->
+  <div class="tabla-scroll" *ngIf="compatibles.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Pieza</th>
+          <th>Marca</th>
+          <th>Categoría</th>
+          <th>Stock</th>
+          <th *ngIf="puedeEditar">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of compatibles">
+          <td><strong class="codigo">{{ p.codigo }}</strong></td>
+          <td><strong>{{ p.nombre }}</strong></td>
+          <td>{{ p.marca }}</td>
+          <td>{{ p.categoria }}</td>
+          <td>{{ p.stock }}</td>
+          <td *ngIf="puedeEditar">
+            <button class="btn-rojo btn-sm" (click)="quitar(p)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              </svg>
+              Quitar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="nota cursiva">
+    Además de estar registrada, cada categoría puede tener reglas propias al validar la pieza
+    (por ejemplo, el Turbo exige un vehículo 1995 o posterior).
+  </p>
+</ng-container>

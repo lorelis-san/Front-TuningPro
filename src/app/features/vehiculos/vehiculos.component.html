@@ -1,0 +1,105 @@
+<h3 class="titulo">Vehículos</h3>
+
+<div *ngIf="mensaje" class="aviso" [class.error]="esError" [class.ok]="!esError" role="status">
+  <svg *ngIf="!esError" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+  <svg *ngIf="esError" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>
+  </svg>
+  <span>{{ mensaje }}</span>
+</div>
+
+<!-- Formulario de registro / edición -->
+<div class="formulario-card" *ngIf="puedeEditar">
+  <strong class="form-titulo">
+    {{ id == null ? 'Nuevo vehículo' : 'Editando vehículo N° ' + id }}
+  </strong>
+
+  <div class="fila">
+    <label class="f-1">
+      Placa
+      <input type="text" [(ngModel)]="placa" placeholder="ABC-123" class="input-amplio" />
+    </label>
+    <label class="f-15">
+      Marca
+      <input type="text" [(ngModel)]="marca" placeholder="Ej. Toyota" class="input-amplio" />
+    </label>
+    <label class="f-15">
+      Modelo
+      <input type="text" [(ngModel)]="modelo" placeholder="Ej. Supra" class="input-amplio" />
+    </label>
+    <label class="f-1">
+      Año
+      <input type="number" min="1950" [(ngModel)]="anio" class="input-amplio" />
+    </label>
+    <label class="f-2">
+      Nombre del cliente
+      <input type="text" [(ngModel)]="clienteNombre" placeholder="Nombre completo" class="input-amplio" />
+    </label>
+    <label class="f-2">
+      Cuenta del portal
+      <select [(ngModel)]="usuarioId" class="input-amplio">
+        <option [ngValue]="null">Sin cuenta de portal</option>
+        <option *ngFor="let c of clientes" [ngValue]="c.id">{{ c.nombreCompleto }} ({{ c.nombreUsuario }})</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="acciones">
+    <button class="btn-azul" (click)="guardar()">{{ id == null ? 'Registrar' : 'Guardar cambios' }}</button>
+    <button class="btn-secundario" *ngIf="id != null" (click)="limpiar()">Cancelar</button>
+  </div>
+
+  <p class="nota">La cuenta del portal permite que el cliente vea este vehículo y sus proyectos al iniciar sesión.</p>
+</div>
+
+<!-- Barra de búsqueda -->
+<div class="fila barra-busqueda">
+  <label class="f-3">
+    Buscar por placa, marca, modelo o cliente
+    <input type="text" [(ngModel)]="buscar" (keyup.enter)="cargar()" placeholder="Ej. Torres" class="input-amplio" />
+  </label>
+  <div class="botones-busqueda">
+    <button class="btn-azul" (click)="cargar()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+      </svg>
+      Buscar
+    </button>
+    <button class="btn-secundario" (click)="limpiarBusqueda()" *ngIf="buscar">Limpiar</button>
+  </div>
+</div>
+
+<p class="nota" *ngIf="vehiculos.length === 0">No se encontraron vehículos.</p>
+
+<!-- Tabla -->
+<div class="tabla-scroll" *ngIf="vehiculos.length > 0">
+  <table>
+    <thead>
+      <tr>
+        <th>Placa</th>
+        <th>Vehículo</th>
+        <th>Año</th>
+        <th>Cliente</th>
+        <th>Cuenta del portal</th>
+        <th *ngIf="puedeEditar">Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let v of vehiculos">
+        <td><strong class="codigo">{{ v.placa }}</strong></td>
+        <td><strong>{{ v.marca }} {{ v.modelo }}</strong></td>
+        <td>{{ v.anio }}</td>
+        <td>{{ v.clienteNombre }}</td>
+        <td>
+          <span *ngIf="v.usuarioId != null" class="etiqueta">{{ cuenta(v) }}</span>
+          <span *ngIf="v.usuarioId == null" class="sin-cuenta">Sin cuenta</span>
+        </td>
+        <td *ngIf="puedeEditar">
+          <button class="btn-azul btn-sm" (click)="editar(v)">Editar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

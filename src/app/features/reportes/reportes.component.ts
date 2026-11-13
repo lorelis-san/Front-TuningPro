@@ -12,71 +12,8 @@ interface VehiculoItem { id: number; placa: string; marca: string; modelo: strin
   selector: 'app-reportes',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: `
-    <section class="gestion">
-      <h2>Reportes (PDF)</h2>
-
-      <div *ngIf="mensaje" class="aviso" [class.error]="esError" [class.ok]="!esError">
-        {{ esError ? '❌' : '✅' }} {{ mensaje }}
-      </div>
-
-      <div class="tarjetas">
-
-        <div class="tarjeta" *ngIf="puedeInventario">
-          <strong>📦 Inventario de piezas</strong>
-          <p class="nota">Stock actual, valor del inventario y piezas con stock bajo.</p>
-          <div class="fila">
-            <button (click)="generar('inventario', '/reportes/inventario', 'inventario', false)" [disabled]="ocupado !== null">
-              {{ ocupado === 'inventario' ? 'Generando...' : 'Descargar PDF' }}
-            </button>
-            <button (click)="generar('inventario', '/reportes/inventario', 'inventario', true)" [disabled]="ocupado !== null">
-              Ver
-            </button>
-          </div>
-        </div>
-
-        <div class="tarjeta" *ngIf="puedeProyectos">
-          <strong>🛠 Proyectos y órdenes</strong>
-          <p class="nota">Todos los proyectos con su estado, orden de trabajo y total.</p>
-          <div class="fila">
-            <button (click)="generar('proyectos', '/reportes/proyectos', 'proyectos', false)" [disabled]="ocupado !== null">
-              {{ ocupado === 'proyectos' ? 'Generando...' : 'Descargar PDF' }}
-            </button>
-            <button (click)="generar('proyectos', '/reportes/proyectos', 'proyectos', true)" [disabled]="ocupado !== null">
-              Ver
-            </button>
-          </div>
-        </div>
-
-        <div class="tarjeta">
-          <strong>🚗 Historial técnico del vehículo</strong>
-          <p class="nota">Trazabilidad completa de las modificaciones de un vehículo.</p>
-          <label>Vehículo
-            <select [(ngModel)]="vehiculoId">
-              <option [ngValue]="null" disabled>Selecciona un vehículo...</option>
-              <option *ngFor="let v of vehiculos" [ngValue]="v.id">
-                {{ v.marca }} {{ v.modelo }} ({{ v.placa }})
-              </option>
-            </select>
-          </label>
-          <div class="fila">
-            <button (click)="generarHistorial(false)" [disabled]="ocupado !== null || vehiculoId == null">
-              {{ ocupado === 'historial' ? 'Generando...' : 'Descargar PDF' }}
-            </button>
-            <button (click)="generarHistorial(true)" [disabled]="ocupado !== null || vehiculoId == null">
-              Ver
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </section>
-  `,
-  styles: [`
-    .tarjetas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
-    .tarjeta { flex: 1; min-width: 250px; border: 1px solid #bbb; border-radius: 8px; padding: 12px 14px;
-               background: #fafafa; display: flex; flex-direction: column; gap: 4px; }
-  `]
+  templateUrl: './reportes.component.html',
+  styleUrls: ['./reportes.component.css']
 })
 export class ReportesComponent implements OnInit {
   vehiculos: VehiculoItem[] = [];

@@ -1,0 +1,68 @@
+<div class="head">
+  <div class="eyebrow">Gestión</div>
+  <h1>Inventario de piezas</h1>
+  <p class="sub">Consulta el stock, valida compatibilidad y registra entradas.</p>
+</div>
+
+@if (mensaje) {
+  <div class="aviso" [class.error]="esError" [class.ok]="!esError">{{ mensaje }}</div>
+}
+
+<section class="card">
+  <div class="barra">
+    <div class="buscador">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>
+      </svg>
+      <input type="text" placeholder="Buscar por código, nombre o categoría…" [(ngModel)]="busqueda" />
+    </div>
+
+    @if (puedeValidar) {
+      <label class="validar">
+        <span>Validar compatibilidad con</span>
+        <select [(ngModel)]="vehiculoValidarId">
+          @for (v of vehiculos; track v.id) {
+            <option [ngValue]="v.id">{{ v.marca }} {{ v.modelo }} ({{ v.placa }}) - {{ v.anio }}</option>
+          }
+        </select>
+      </label>
+    }
+  </div>
+
+  <div class="tabla-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th><th>Nombre</th><th>Categoría</th><th>Stock</th><th>Precio</th>
+          @if (puedeValidar) { <th>Compatibilidad</th> }
+          @if (puedeEntradas) { <th>Registrar entrada</th> }
+        </tr>
+      </thead>
+      <tbody>
+        @for (p of piezasFiltradas; track p.id) {
+          <tr [class.stock-bajo]="esStockBajo(p)">
+            <td>{{ p.codigo }}</td>
+            <td><strong>{{ p.nombre }}</strong></td>
+            <td>{{ p.categoria }}</td>
+            <td>
+              {{ p.stock }}
+              @if (esStockBajo(p)) { <span class="etiqueta">Stock bajo</span> }
+            </td>
+            <td>S/ {{ p.precioUnitario | number:'1.2-2' }}</td>
+            @if (puedeValidar) {
+              <td><button type="button" class="btn" (click)="validar(p.id)">Validar</button></td>
+            }
+            @if (puedeEntradas) {
+              <td class="entrada">
+                <input type="number" min="1" placeholder="Cant." [(ngModel)]="entradas[p.id]" />
+                <button type="button" class="btn" (click)="registrarEntrada(p)">+ Entrada</button>
+              </td>
+            }
+          </tr>
+        } @empty {
+          <tr><td colspan="7" class="vacio">No hay piezas para mostrar.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

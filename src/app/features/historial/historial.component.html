@@ -1,0 +1,128 @@
+<section class="pagina">
+  <div class="encabezado">
+    <h2>Historial técnico del vehículo</h2>
+    <button class="btn-secundario" (click)="cargarVehiculos()" [disabled]="cargando">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+      {{ cargando ? 'Actualizando...' : 'Actualizar' }}
+    </button>
+  </div>
+
+  <div *ngIf="mensaje" class="aviso error" role="alert">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+    <span>{{ mensaje }}</span>
+  </div>
+
+  <div class="fila selector">
+    <label>
+      Vehículo
+      <select [ngModel]="vehiculoId" (ngModelChange)="elegir($event)" class="input-amplio">
+        <option [ngValue]="null" disabled>Selecciona un vehículo...</option>
+        <option *ngFor="let v of vehiculos" [ngValue]="v.id">
+          {{ v.marca }} {{ v.modelo }} ({{ v.placa }}) - {{ v.clienteNombre }}
+        </option>
+      </select>
+    </label>
+  </div>
+
+  <ng-container *ngIf="historial">
+    <div class="ficha">
+      <span class="icono-caja">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+      </span>
+      <strong>{{ historial.marca }} {{ historial.modelo }}</strong>
+      <span>Placa: {{ historial.placa }}</span>
+      <span>Año: {{ historial.anio }}</span>
+      <span>Cliente: {{ historial.cliente }}</span>
+    </div>
+
+    <div class="resumen">
+      <div class="dato">
+        <span class="icono-caja">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+        </span>
+        <div class="dato-texto">
+          <span class="valor">{{ historial.totalProyectos }}</span>
+          <span>Proyectos</span>
+        </div>
+      </div>
+      <div class="dato">
+        <span class="icono-caja">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        </span>
+        <div class="dato-texto">
+          <span class="valor">{{ historial.totalPiezasInstaladas }}</span>
+          <span>Piezas instaladas</span>
+        </div>
+      </div>
+      <div class="dato">
+        <span class="icono-caja">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
+        </span>
+        <div class="dato-texto">
+          <span class="valor">S/ {{ historial.inversionTotal | number:'1.2-2' }}</span>
+          <span>Inversión total</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="nota" *ngIf="historial.proyectos.length === 0">
+      Este vehículo aún no tiene modificaciones registradas.
+    </p>
+
+    <div class="linea">
+      <div class="hito" *ngFor="let p of historial.proyectos">
+        <span class="punto-linea"></span>
+        <div class="contenido">
+          <div class="cabecera">
+            <div>
+              <strong>Proyecto N° {{ p.id }} – {{ p.nombre }}</strong>
+              <span class="nota">Registrado el {{ p.fechaRegistro | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            <span class="estado" [attr.data-estado]="p.estado">{{ p.estado }}</span>
+          </div>
+
+          <p class="nota" *ngIf="p.piezas.length === 0">Sin piezas instaladas todavía.</p>
+          <div class="tabla-scroll" *ngIf="p.piezas.length > 0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Código</th><th>Pieza</th><th>Marca</th><th>Categoría</th>
+                  <th>Cant.</th><th>Precio unit.</th><th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let d of p.piezas">
+                  <td>{{ d.codigo }}</td>
+                  <td>{{ d.pieza }}</td>
+                  <td>{{ d.marca }}</td>
+                  <td>{{ d.categoria }}</td>
+                  <td>{{ d.cantidad }}</td>
+                  <td>S/ {{ d.precioUnitario | number:'1.2-2' }}</td>
+                  <td>S/ {{ d.subtotal | number:'1.2-2' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="orden" *ngIf="p.orden">
+            <div class="orden-cab">
+              <strong>{{ codigoOrden(p.orden.id) }}</strong>
+              <span>Emitida el {{ p.orden.fechaEmision | date:'dd/MM/yyyy' }} por {{ p.orden.emitidaPor }}</span>
+            </div>
+            <div class="orden-filas">
+              <span>Piezas: S/ {{ p.orden.totalPiezas | number:'1.2-2' }}</span>
+              <span>Mano de obra: S/ {{ p.orden.manoObra | number:'1.2-2' }}</span>
+              <strong>Total: S/ {{ p.orden.total | number:'1.2-2' }}</strong>
+            </div>
+          </div>
+
+          <p class="nota" *ngIf="!p.orden && p.piezas.length > 0 && p.estado !== 'Cancelado' && p.estado !== 'Rechazado'">
+            Sin orden de trabajo emitida.
+          </p>
+          <p class="nota" *ngIf="p.estado === 'Cancelado'">Proyecto cancelado: las piezas asignadas volvieron al inventario.</p>
+          <p class="nota" *ngIf="p.estado === 'Rechazado'">Proyecto rechazado.</p>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</section>

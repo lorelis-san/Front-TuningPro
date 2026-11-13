@@ -1,0 +1,105 @@
+<div class="head">
+  <div>
+    <div class="eyebrow">Panel general</div>
+    <h1>{{ saludo }}</h1>
+    <p class="sub">Aquí tienes el resumen de las operaciones del taller.</p>
+  </div>
+  @if (puedeCrearProyecto) {
+    <a class="btn-primary" routerLink="/proyectos/nuevo">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+      Nuevo proyecto
+    </a>
+  }
+</div>
+
+<div class="kpis">
+  <div class="kpi">
+    <span class="icono azul">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+    </span>
+    <div><span class="lbl">Proyectos registrados</span><strong>{{ totalProyectos() }}</strong><small>+{{ proyectosSemana() }} esta semana</small></div>
+  </div>
+
+  <div class="kpi">
+    <span class="icono ambar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4h6v3H9zM9 12h6M9 16h4"></path></svg>
+    </span>
+    <div><span class="lbl">Órdenes activas</span><strong>{{ ordenesActivas() }}</strong><small>{{ ordenesPorIniciar() }} por iniciar</small></div>
+  </div>
+
+  <div class="kpi">
+    <span class="icono verde">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 16l1.5-5a2 2 0 0 1 1.9-1.4h7.2a2 2 0 0 1 1.9 1.4L19 16M4 16h16v3h-2v-1H6v1H4z"></path><circle cx="8" cy="14" r=".5"></circle><circle cx="16" cy="14" r=".5"></circle></svg>
+    </span>
+    <div><span class="lbl">Vehículos atendidos</span><strong>{{ vehiculosAtendidos() }}</strong><small>Registro acumulado</small></div>
+  </div>
+
+  <div class="kpi">
+    <span class="icono violeta">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+    </span>
+    <div><span class="lbl">Facturación en OT</span><strong>S/ {{ facturacion() | number:'1.2-2' }}</strong><small>Incluye IGV</small></div>
+  </div>
+</div>
+
+<div class="fila2">
+  <section class="card">
+    <div class="card-head">
+      <div>
+        <h2>Proyectos recientes</h2>
+        <p>Últimos ingresos registrados</p>
+      </div>
+      <a class="ver-todos" routerLink="/proyectos">Ver todos ›</a>
+    </div>
+
+    @if (cargando()) {
+      <div class="vacio">Cargando…</div>
+    } @else if (recientes().length === 0) {
+      <div class="vacio">Aún no hay proyectos registrados.</div>
+    } @else {
+      <div class="tabla-scroll">
+        <table>
+          <thead><tr><th>Proyecto</th><th>Cliente / Vehículo</th><th>Fecha</th><th>Estado</th><th></th></tr></thead>
+          <tbody>
+            @for (p of recientes(); track p.id) {
+              <tr>
+                <td><a class="codigo" [routerLink]="['/proyectos', p.id]">{{ p.codigo }}</a></td>
+                <td><strong>{{ p.cliente }}</strong><small>{{ p.vehiculo }}{{ p.placa ? ' · ' + p.placa : '' }}</small></td>
+                <td class="fecha">{{ p.fecha | date:'d MMM y' }}</td>
+                <td><span [class]="'estado ' + claseEstado(p.estado)">{{ p.estado }}</span></td>
+                <td><a class="flecha" [routerLink]="['/proyectos', p.id]">›</a></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <div>
+        <h2>Estado de órdenes</h2>
+        <p>Distribución actual</p>
+      </div>
+    </div>
+
+    <div class="dona">
+      <svg viewBox="0 0 140 140" width="170" height="170">
+        <circle cx="70" cy="70" r="52" fill="none" stroke="#eef2f7" stroke-width="14"></circle>
+        @for (s of segmentos(); track s.color) {
+          <circle cx="70" cy="70" r="52" fill="none" [attr.stroke]="s.color" stroke-width="14"
+                  [attr.stroke-dasharray]="s.dash" [attr.stroke-dashoffset]="s.offset"
+                  transform="rotate(-90 70 70)"></circle>
+        }
+      </svg>
+      <div class="centro"><strong>{{ ordenes().length }}</strong><small>Total OT</small></div>
+    </div>
+
+    <ul class="leyenda">
+      @for (e of estados; track e.nombre) {
+        <li><span class="punto" [style.background]="e.color"></span>{{ e.nombre }}<strong>{{ conteo(e.nombre) }}</strong></li>
+      }
+    </ul>
+  </section>
+</div>

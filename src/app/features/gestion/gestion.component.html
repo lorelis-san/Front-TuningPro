@@ -1,0 +1,42 @@
+<section class="gestion">
+  <h2>Gestión de datos del taller</h2>
+
+  <p class="nota" *ngIf="pestanas.length === 0">Tu rol no tiene opciones de gestión.</p>
+
+  <div class="tabs" role="tablist" *ngIf="pestanas.length > 0">
+    <button class="tab" role="tab" *ngFor="let t of pestanas"
+            [class.activa]="t.id === activa"
+            [attr.aria-selected]="t.id === activa"
+            (click)="activa = t.id">
+      <ng-container [ngSwitch]="t.id">
+        <!-- Vehículos -->
+        <svg *ngSwitchCase="'vehiculos'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>
+          <circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>
+        </svg>
+        <!-- Piezas -->
+        <svg *ngSwitchCase="'piezas'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
+          <path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>
+        </svg>
+        <!-- Proveedores -->
+        <svg *ngSwitchCase="'proveedores'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+          <path d="M17 18h1"/><path d="M12 18h1"/><path d="M7 18h1"/>
+        </svg>
+        <!-- Compatibilidades -->
+        <svg *ngSwitchCase="'compatibilidades'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+      </ng-container>
+      <span>{{ t.texto }}</span>
+    </button>
+  </div>
+
+  <div class="contenido">
+    <app-vehiculos *ngIf="activa === 'vehiculos' && visible('vehiculos')" (cambio)="cambio.emit()"></app-vehiculos>
+    <app-catalogo-piezas *ngIf="activa === 'piezas' && visible('piezas')" (cambio)="cambio.emit()"></app-catalogo-piezas>
+    <app-proveedores *ngIf="activa === 'proveedores' && visible('proveedores')" (cambio)="cambio.emit()"></app-proveedores>
+    <app-compatibilidades *ngIf="activa === 'compatibilidades' && visible('compatibilidades')" (cambio)="cambio.emit()"></app-compatibilidades>
+  </div>
+</section>

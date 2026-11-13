@@ -6,7 +6,7 @@ import { AuthService } from '../../core/services/auth.service';
 interface ItemMenu {
   ruta: string;
   texto: string;
-  icono: 'inventario' | 'proyectos' | 'ordenes' | 'historial' | 'reportes' | 'gestion';
+  icono: 'inventario' | 'proyectos' | 'ordenes' | 'historial' | 'reportes' | 'gestion' |'inicio';
   ver: boolean;
 }
 
@@ -21,7 +21,7 @@ export class MenuLayoutComponent {
   isSidebarOpen = false;
 
   constructor(public auth: AuthService, private router: Router) {}
-
+  get verInicio() { return this.auth.puede('Administrador', 'Tecnico', 'Auxiliar'); }
   get verInventario() { return this.auth.puede('Administrador', 'Tecnico', 'Auxiliar'); }
   get verProyectos()  { return this.auth.puede('Administrador', 'Tecnico', 'Recepcionista'); }
   get verOrdenes()    { return this.auth.puede('Administrador', 'Recepcionista', 'Tecnico'); }
@@ -31,11 +31,12 @@ export class MenuLayoutComponent {
 
   get itemsMenu(): ItemMenu[] {
     const todos: ItemMenu[] = [
-      { ruta: '/inventario', texto: 'Inventario', icono: 'inventario', ver: this.verInventario },
+       { ruta: '/inicio', texto: 'Inicio', icono: 'inicio', ver: this.verInicio },
       { ruta: '/proyectos', texto: 'Proyectos', icono: 'proyectos', ver: this.verProyectos },
       { ruta: '/ordenes-trabajo', texto: 'Órdenes de trabajo', icono: 'ordenes', ver: this.verOrdenes },
       { ruta: '/historial', texto: 'Historial técnico', icono: 'historial', ver: this.verHistorial },
       { ruta: '/reportes', texto: 'Reportes', icono: 'reportes', ver: this.verReportes },
+      { ruta: '/inventario', texto: 'Inventario', icono: 'inventario', ver: this.verInventario },
       { ruta: '/gestion', texto: 'Gestión de datos', icono: 'gestion', ver: this.verGestion }
     ];
     return todos.filter(i => i.ver);

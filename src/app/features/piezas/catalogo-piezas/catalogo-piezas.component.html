@@ -1,0 +1,97 @@
+<h3 class="titulo">Catálogo de piezas</h3>
+
+<div *ngIf="mensaje" class="aviso" [class.error]="esError" [class.ok]="!esError" role="status">
+  <svg *ngIf="!esError" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+  <svg *ngIf="esError" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>
+  </svg>
+  <span>{{ mensaje }}</span>
+</div>
+
+<!-- Formulario de registro / edición -->
+<div class="formulario-card" *ngIf="puedeEditar">
+  <strong class="form-titulo">
+    {{ id == null ? 'Nueva pieza' : 'Editando pieza N° ' + id }}
+  </strong>
+
+  <div class="fila">
+    <label class="f-1">
+      Código
+      <input type="text" [(ngModel)]="codigo" placeholder="BRM-002" class="input-amplio" />
+    </label>
+    <label class="f-2">
+      Nombre
+      <input type="text" [(ngModel)]="nombre" placeholder="Nombre de la pieza" class="input-amplio" />
+    </label>
+    <label class="f-15">
+      Marca
+      <input type="text" [(ngModel)]="marca" placeholder="Marca" class="input-amplio" />
+    </label>
+    <label class="f-15">
+      Categoría
+      <select [(ngModel)]="categoria" class="input-amplio">
+        <option *ngFor="let c of categorias" [ngValue]="c">{{ c }}</option>
+      </select>
+    </label>
+    <label class="f-1">
+      Stock inicial
+      <input type="number" min="0" [(ngModel)]="stock" [disabled]="id != null" class="input-amplio" />
+    </label>
+    <label class="f-1">
+      Precio (S/)
+      <input type="number" min="0" step="0.01" [(ngModel)]="precio" class="input-amplio" />
+    </label>
+    <label class="f-2">
+      Proveedor
+      <select [(ngModel)]="proveedorId" class="input-amplio">
+        <option [ngValue]="null" disabled>Proveedor...</option>
+        <option *ngFor="let p of proveedores" [ngValue]="p.id">{{ p.nombre }}</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="acciones">
+    <button class="btn-azul" (click)="guardar()">{{ id == null ? 'Registrar' : 'Guardar cambios' }}</button>
+    <button class="btn-secundario" *ngIf="id != null" (click)="limpiar()">Cancelar</button>
+  </div>
+
+  <p class="nota" *ngIf="id != null">
+    El stock no se edita aquí: se modifica con "+ Entrada" en el inventario o al asignar piezas a proyectos.
+  </p>
+</div>
+
+<p class="nota" *ngIf="piezas.length === 0">Aún no hay piezas registradas.</p>
+
+<!-- Tabla -->
+<div class="tabla-scroll" *ngIf="piezas.length > 0">
+  <table>
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Marca</th>
+        <th>Categoría</th>
+        <th>Proveedor</th>
+        <th>Stock</th>
+        <th>Precio</th>
+        <th *ngIf="puedeEditar">Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of piezas">
+        <td><strong class="codigo">{{ p.codigo }}</strong></td>
+        <td><strong>{{ p.nombre }}</strong></td>
+        <td>{{ p.marca }}</td>
+        <td>{{ p.categoria }}</td>
+        <td>{{ nombreProveedor(p.proveedorId) }}</td>
+        <td>{{ p.stock }}</td>
+        <td><strong class="precio">S/ {{ p.precioUnitario | number:'1.2-2' }}</strong></td>
+        <td *ngIf="puedeEditar">
+          <button class="btn-azul btn-sm" (click)="editar(p)">Editar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

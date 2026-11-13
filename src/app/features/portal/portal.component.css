@@ -1,0 +1,190 @@
+:host { display: block; }
+
+.pagina h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+}
+.pagina h3 { margin: 22px 0 10px; font-size: 1.05rem; font-weight: 700; color: #1e3a8a; }
+.encabezado { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; }
+
+.nota { color: #64748b; font-size: 13px; margin: 6px 0; }
+.fila { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+
+label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 13px; color: #475569; }
+
+.input-amplio {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  background-color: #f8fafc;
+  color: #0f172a;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.input-amplio:focus {
+  border-color: #2563eb;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btn-azul, .btn-secundario {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.btn-azul { background: #2563eb; color: #ffffff; }
+.btn-azul:hover:not(:disabled) { background: #1d4ed8; }
+.btn-secundario { background: #e2e8f0; color: #334155; }
+.btn-secundario:hover:not(:disabled) { background: #cbd5e1; }
+.btn-azul:disabled, .btn-secundario:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-azul:focus-visible, .btn-secundario:focus-visible { outline: 3px solid rgba(37, 99, 235, 0.4); outline-offset: 2px; }
+.btn-azul svg, .btn-secundario svg { width: 15px; height: 15px; flex: none; }
+
+.aviso {
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin: 0 0 16px 0;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.aviso svg { width: 18px; height: 18px; flex: none; }
+.aviso.ok { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.aviso.error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+.tabla-scroll { overflow-x: auto; margin-top: 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
+table { border-collapse: collapse; width: 100%; background: #ffffff; font-size: 14px; }
+th, td { border-bottom: 1px solid #e2e8f0; padding: 11px 14px; text-align: left; vertical-align: middle; }
+th {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: #f8fafc; }
+tr.total td { font-weight: 700; background: #f8fafc; color: #1e3a8a; }
+
+.estado { padding: 3px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; background: #e2e8f0; color: #475569; white-space: nowrap; }
+.estado[data-estado="Registrado"] { background: #dbeafe; color: #1d4ed8; }
+.estado[data-estado="En proceso"] { background: #fef3c7; color: #92400e; }
+.estado[data-estado="Finalizado"] { background: #dcfce7; color: #15803d; }
+.estado[data-estado="En pausa"] { background: #ede9fe; color: #5b21b6; }
+.estado[data-estado="Cancelado"] { background: #e2e8f0; color: #475569; }
+.estado[data-estado="Rechazado"] { background: #fee2e2; color: #b91c1c; }
+
+.orden {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: #1e293b;
+}
+
+.icono-caja {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  padding: 8px;
+  border-radius: 8px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  box-sizing: border-box;
+}
+.icono-caja svg { width: 100%; height: 100%; display: block; }
+
+.tarjetas { display: flex; flex-wrap: wrap; gap: 14px; }
+.tarjeta {
+  flex: 1;
+  min-width: 250px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 18px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tarjeta-cab { display: flex; align-items: center; gap: 10px; color: #1e3a8a; }
+
+.tarjeta.vehiculo { flex: 0 1 230px; min-width: 200px; gap: 4px; font-size: 14px; color: #475569; }
+.tarjeta.vehiculo strong { color: #0f172a; font-size: 15px; }
+
+.proyecto { border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 18px; margin: 14px 0; background: #ffffff; }
+.cabecera { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.cabecera strong { color: #0f172a; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 4px; }
+.meta .nota { margin: 0; }
+
+.aviso-estado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.aviso-estado svg { width: 18px; height: 18px; flex: none; }
+.aviso-estado.pausa { background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe; }
+.aviso-estado.cerrado { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+.pasos { display: flex; gap: 8px; margin: 16px 0; }
+.paso {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  border-top: 4px solid #e2e8f0;
+  padding-top: 8px;
+}
+.paso.hecho { border-top-color: #16a34a; color: #15803d; font-weight: 600; }
+.paso.actual { border-top-color: #2563eb; color: #1d4ed8; }
+.punto {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.punto svg { width: 14px; height: 14px; }
+.paso.hecho .punto { background: #16a34a; }
+.paso.actual .punto { background: #2563eb; }
+
+.orden-filas { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+.monto { font-weight: 700; font-size: 1.05rem; color: #1d4ed8; margin-top: 4px; }
+
+.sin-margen-sup { margin-top: 0; }

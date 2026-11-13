@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { MenuLayoutComponent } from './layout/menu-layout/menu-layout.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { PortalComponent } from './features/portal/portal.component';
+import { InventarioComponent } from './features/inventario/inventario.component';
 import { OtListComponent } from './features/ordenes-trabajo/ot-list/ot-list.component';
 import { OtNuevaComponent } from './features/ordenes-trabajo/ot-nueva/ot-nueva.component';
 import { OtDetalleComponent } from './features/ordenes-trabajo/ot-detalle/ot-detalle.component';
@@ -12,7 +13,7 @@ import { ProyectoListComponent } from './features/proyecto/proyecto-list/proyect
 import { ProyectoNuevoComponent } from './features/proyecto/proyecto-nuevo/proyecto-nuevo.component';
 import { ProyectoDetalleComponent } from './features/proyecto/proyecto-detalle/proyecto-detalle.component';
 import { authGuard, soloInvitadoGuard } from './core/guards/auth.guard';
-
+import { InicioComponent} from './features/inicio/inicio.component'
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [soloInvitadoGuard] },
   {
@@ -21,6 +22,8 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'proyectos', pathMatch: 'full' },
+      { path: 'inventario', component: InventarioComponent },
+      { path: 'inicio', component: InicioComponent },
       { path: 'proyectos', component: ProyectoListComponent },
       { path: 'proyectos/nuevo', component: ProyectoNuevoComponent },
       { path: 'proyectos/:id', component: ProyectoDetalleComponent },

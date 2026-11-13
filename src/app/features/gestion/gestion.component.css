@@ -1,0 +1,46 @@
+.gestion h2 {
+  margin: 0 0 18px 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+}
+
+.nota { color: #64748b; font-size: 13px; margin: 6px 0 12px 0; }
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.tab svg { width: 16px; height: 16px; flex: none; }
+
+.tab:hover { background: #f1f5f9; color: #1e3a8a; }
+
+.tab.activa {
+  background: #1e3a8a;
+  border-color: #1e3a8a;
+  color: #ffffff;
+}
+
+.tab:focus-visible { outline: 3px solid rgba(37, 99, 235, 0.4); outline-offset: 2px; }
